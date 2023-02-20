@@ -91,7 +91,7 @@ web3._extend({
 
 const VlryashJs = `
 web3._extend({
-	property: 'ftmash',
+	property: 'vlryash',
 	methods: [
 		new web3._extend.Method({
 			name: 'getWork',

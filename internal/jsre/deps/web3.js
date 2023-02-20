@@ -1912,17 +1912,17 @@ var unitMap = {
     'gether':       '1000000000000000000000000000',
     'tether':       '1000000000000000000000000000000',
 
-    'noftm':      '0',
-    'femtoftm':   '1000',
-    'picoftm':    '1000000',
-    'nanoftm':    '1000000000',
-    'microftm':   '1000000000000',
-    'milliftm':   '1000000000000000',
+    'novlry':      '0',
+    'femtovlry':   '1000',
+    'picovlry':    '1000000',
+    'nanovlry':    '1000000000',
+    'microvlry':   '1000000000000',
+    'millivlry':   '1000000000000000',
     'vlry':        '1000000000000000000',
-    'kftm':       '1000000000000000000000',
-    'mftm':       '1000000000000000000000000',
-    'gftm':       '1000000000000000000000000000',
-    'tftm':       '1000000000000000000000000000000'
+    'kvlry':       '1000000000000000000000',
+    'mvlry':       '1000000000000000000000000',
+    'gvlry':       '1000000000000000000000000000',
+    'tvlry':       '1000000000000000000000000000000'
 };
 
 /**
@@ -2884,7 +2884,7 @@ var addFunctionsToContract = function (contract) {
     contract.abi.filter(function (json) {
         return json.type === 'function';
     }).map(function (json) {
-        return new SolidityFunction(contract._ftm, json, contract.address);
+        return new SolidityFunction(contract._vlry, json, contract.address);
     }).forEach(function (f) {
         f.attachToContract(contract);
     });
@@ -2902,11 +2902,11 @@ var addEventsToContract = function (contract) {
         return json.type === 'event';
     });
 
-    var All = new AllEvents(contract._ftm._requestManager, events, contract.address);
+    var All = new AllEvents(contract._vlry._requestManager, events, contract.address);
     All.attachToContract(contract);
 
     events.map(function (json) {
-        return new SolidityEvent(contract._ftm._requestManager, json, contract.address);
+        return new SolidityEvent(contract._vlry._requestManager, json, contract.address);
     }).forEach(function (e) {
         e.attachToContract(contract);
     });
@@ -2926,7 +2926,7 @@ var checkForContractAddress = function(contract, callback){
         callbackFired = false;
 
     // wait for receipt
-    var filter = contract._ftm.filter('latest', function(e){
+    var filter = contract._vlry.filter('latest', function(e){
         if (!e && !callbackFired) {
             count++;
 
@@ -2944,10 +2944,10 @@ var checkForContractAddress = function(contract, callback){
 
             } else {
 
-                contract._ftm.getTransactionReceipt(contract.transactionHash, function(e, receipt){
+                contract._vlry.getTransactionReceipt(contract.transactionHash, function(e, receipt){
                     if(receipt && !callbackFired) {
 
-                        contract._ftm.getCode(receipt.contractAddress, function(e, code){
+                        contract._vlry.getCode(receipt.contractAddress, function(e, code){
                             /*jshint maxcomplexity: 6 */
 
                             if(callbackFired || !code)
@@ -4432,12 +4432,12 @@ SolidityFunction.prototype.call = function () {
 
 
     if (!callback) {
-        var output = this._ftm.call(payload, defaultBlock);
+        var output = this._vlry.call(payload, defaultBlock);
         return this.unpackOutput(output);
     }
 
     var self = this;
-    this._ftm.call(payload, defaultBlock, function (error, output) {
+    this._vlry.call(payload, defaultBlock, function (error, output) {
         if (error) return callback(error, null);
 
         var unpacked = null;
@@ -4467,10 +4467,10 @@ SolidityFunction.prototype.sendTransaction = function () {
     }
 
     if (!callback) {
-        return this._ftm.sendTransaction(payload);
+        return this._vlry.sendTransaction(payload);
     }
 
-    this._ftm.sendTransaction(payload, callback);
+    this._vlry.sendTransaction(payload, callback);
 };
 
 /**
@@ -4484,10 +4484,10 @@ SolidityFunction.prototype.estimateGas = function () {
     var payload = this.toPayload(args);
 
     if (!callback) {
-        return this._ftm.estimateGas(payload);
+        return this._vlry.estimateGas(payload);
     }
 
-    this._ftm.estimateGas(payload, callback);
+    this._vlry.estimateGas(payload, callback);
 };
 
 /**
@@ -5766,40 +5766,40 @@ var methods = function () {
 
     var getEvent = new Method({
         name: 'getEvent',
-        call: 'ftm_getEvent',
+        call: 'vlry_getEvent',
         params: 2
     });
 
     var getEventHeader = new Method({
         name: 'getEventHeader',
-        call: 'ftm_getEventHeader',
+        call: 'vlry_getEventHeader',
         params: 1
     });
 
     var getHeads = new Method({
         name: 'getHeads',
-        call: 'ftm_getHeads',
+        call: 'vlry_getHeads',
         params: 1,
         inputFormatter: [formatters.inputBlockNumberFormatter]
     });
 
     var getConsensusTime = new Method({
         name: 'getConsensusTime',
-        call: 'ftm_getConsensusTime',
+        call: 'vlry_getConsensusTime',
         params: 1,
         outputFormatter: utils.toDecimal
     });
 
     var currentEpoch = new Method({
         name: 'currentEpoch',
-        call: 'ftm_currentEpoch',
+        call: 'vlry_currentEpoch',
         params: 0,
         outputFormatter: utils.toDecimal
     });
 
     var getEpochStats = new Method({
         name: 'getEpochStats',
-        call: 'ftm_getEpochStats',
+        call: 'vlry_getEpochStats',
         params: 1,
         inputFormatter: [formatters.inputBlockNumberFormatter],
         outputFormatter: formatters.outputEpochStatsFormatter
