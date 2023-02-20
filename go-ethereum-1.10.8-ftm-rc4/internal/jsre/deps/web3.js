@@ -926,7 +926,7 @@ var SolidityParam = require('./param');
  * @returns {SolidityParam}
  */
 var formatInputInt = function (value) {
-    BigNumber.config(c.FTM_BIGNUMBER_ROUNDING_MODE);
+    BigNumber.config(c.Vlry_BIGNUMBER_ROUNDING_MODE);
     var result = utils.padLeft(utils.toTwosComplement(value).toString(16), 64);
     return new SolidityParam(result);
 };
@@ -1758,10 +1758,10 @@ if (typeof XMLHttpRequest === 'undefined') {
  */
 
 
-/// required to define FTM_BIGNUMBER_ROUNDING_MODE
+/// required to define Vlry_BIGNUMBER_ROUNDING_MODE
 var BigNumber = require('bignumber.js');
 
-var FTM_UNITS = [
+var Vlry_UNITS = [
     'wei',
     'kwei',
     'Mwei',
@@ -1792,11 +1792,11 @@ var FTM_UNITS = [
 ];
 
 module.exports = {
-    FTM_PADDING: 32,
-    FTM_SIGNATURE_LENGTH: 4,
-    FTM_UNITS: FTM_UNITS,
-    FTM_BIGNUMBER_ROUNDING_MODE: { ROUNDING_MODE: BigNumber.ROUND_DOWN },
-    FTM_POLLING_TIMEOUT: 1000/2,
+    Vlry_PADDING: 32,
+    Vlry_SIGNATURE_LENGTH: 4,
+    Vlry_UNITS: FTM_UNITS,
+    Vlry_BIGNUMBER_ROUNDING_MODE: { ROUNDING_MODE: BigNumber.ROUND_DOWN },
+    Vlry_POLLING_TIMEOUT: 1000/2,
     defaultBlock: 'latest',
     defaultAccount: undefined
 };
@@ -2884,7 +2884,7 @@ var addFunctionsToContract = function (contract) {
     contract.abi.filter(function (json) {
         return json.type === 'function';
     }).map(function (json) {
-        return new SolidityFunction(contract._ftm, json, contract.address);
+        return new SolidityFunction(contract._vlry, json, contract.address);
     }).forEach(function (f) {
         f.attachToContract(contract);
     });
@@ -2902,11 +2902,11 @@ var addEventsToContract = function (contract) {
         return json.type === 'event';
     });
 
-    var All = new AllEvents(contract._ftm._requestManager, events, contract.address);
+    var All = new AllEvents(contract._vlry._requestManager, events, contract.address);
     All.attachToContract(contract);
 
     events.map(function (json) {
-        return new SolidityEvent(contract._ftm._requestManager, json, contract.address);
+        return new SolidityEvent(contract._vlry._requestManager, json, contract.address);
     }).forEach(function (e) {
         e.attachToContract(contract);
     });
@@ -2926,7 +2926,7 @@ var checkForContractAddress = function(contract, callback){
         callbackFired = false;
 
     // wait for receipt
-    var filter = contract._ftm.filter('latest', function(e){
+    var filter = contract._vlry.filter('latest', function(e){
         if (!e && !callbackFired) {
             count++;
 
@@ -2944,10 +2944,10 @@ var checkForContractAddress = function(contract, callback){
 
             } else {
 
-                contract._ftm.getTransactionReceipt(contract.transactionHash, function(e, receipt){
+                contract._vlry.getTransactionReceipt(contract.transactionHash, function(e, receipt){
                     if(receipt && !callbackFired) {
 
-                        contract._ftm.getCode(receipt.contractAddress, function(e, code){
+                        contract._vlry.getCode(receipt.contractAddress, function(e, code){
                             /*jshint maxcomplexity: 6 */
 
                             if(callbackFired || !code)
@@ -4330,7 +4330,7 @@ var sha3 = require('../utils/sha3');
  * This prototype should be used to call/sendTransaction to solidity functions
  */
 var SolidityFunction = function (vlry, json, address) {
-    this._ftm = vlry;
+    this._vlry = vlry;
     this._inputTypes = json.inputs.map(function (i) {
         return i.type;
     });
@@ -4432,12 +4432,12 @@ SolidityFunction.prototype.call = function () {
 
 
     if (!callback) {
-        var output = this._ftm.call(payload, defaultBlock);
+        var output = this._vlry.call(payload, defaultBlock);
         return this.unpackOutput(output);
     }
 
     var self = this;
-    this._ftm.call(payload, defaultBlock, function (error, output) {
+    this._vlry.call(payload, defaultBlock, function (error, output) {
         if (error) return callback(error, null);
 
         var unpacked = null;
@@ -4467,10 +4467,10 @@ SolidityFunction.prototype.sendTransaction = function () {
     }
 
     if (!callback) {
-        return this._ftm.sendTransaction(payload);
+        return this._vlry.sendTransaction(payload);
     }
 
-    this._ftm.sendTransaction(payload, callback);
+    this._vlry.sendTransaction(payload, callback);
 };
 
 /**
@@ -4484,10 +4484,10 @@ SolidityFunction.prototype.estimateGas = function () {
     var payload = this.toPayload(args);
 
     if (!callback) {
-        return this._ftm.estimateGas(payload);
+        return this._vlry.estimateGas(payload);
     }
 
-    this._ftm.estimateGas(payload, callback);
+    this._vlry.estimateGas(payload, callback);
 };
 
 /**
@@ -5559,7 +5559,7 @@ var uncleCountCall = function (args) {
     return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleCountByBlockHash' : 'eth_getUncleCountByBlockNumber';
 };
 
-function Ftm(web3) {
+function Vlry(web3) {
     this._requestManager = web3._requestManager;
 
     var self = this;
@@ -5579,7 +5579,7 @@ function Ftm(web3) {
     this.sendIBANTransaction = transfer.bind(null, this);
 }
 
-Object.defineProperty(Ftm.prototype, 'defaultBlock', {
+Object.defineProperty(Vlry.prototype, 'defaultBlock', {
     get: function () {
         return c.defaultBlock;
     },
@@ -5589,7 +5589,7 @@ Object.defineProperty(Ftm.prototype, 'defaultBlock', {
     }
 });
 
-Object.defineProperty(Ftm.prototype, 'defaultAccount', {
+Object.defineProperty(Vlry.prototype, 'defaultAccount', {
     get: function () {
         return c.defaultAccount;
     },
@@ -5766,40 +5766,40 @@ var methods = function () {
 
     var getEvent = new Method({
         name: 'getEvent',
-        call: 'ftm_getEvent',
+        call: 'vlry_getEvent',
         params: 2
     });
 
     var getEventHeader = new Method({
         name: 'getEventHeader',
-        call: 'ftm_getEventHeader',
+        call: 'vlry_getEventHeader',
         params: 1
     });
 
     var getHeads = new Method({
         name: 'getHeads',
-        call: 'ftm_getHeads',
+        call: 'vlry_getHeads',
         params: 1,
         inputFormatter: [formatters.inputBlockNumberFormatter]
     });
 
     var getConsensusTime = new Method({
         name: 'getConsensusTime',
-        call: 'ftm_getConsensusTime',
+        call: 'vlry_getConsensusTime',
         params: 1,
         outputFormatter: utils.toDecimal
     });
 
     var currentEpoch = new Method({
         name: 'currentEpoch',
-        call: 'ftm_currentEpoch',
+        call: 'vlry_currentEpoch',
         params: 0,
         outputFormatter: utils.toDecimal
     });
 
     var getEpochStats = new Method({
         name: 'getEpochStats',
-        call: 'ftm_getEpochStats',
+        call: 'vlry_getEpochStats',
         params: 1,
         inputFormatter: [formatters.inputBlockNumberFormatter],
         outputFormatter: formatters.outputEpochStatsFormatter
@@ -5876,28 +5876,28 @@ var properties = function () {
     ];
 };
 
-Ftm.prototype.contract = function (abi) {
+Vlry.prototype.contract = function (abi) {
     var factory = new Contract(this, abi);
     return factory;
 };
 
-Ftm.prototype.filter = function (options, callback, filterCreationErrorCallback) {
+Vlry.prototype.filter = function (options, callback, filterCreationErrorCallback) {
     return new Filter(options, 'vlry', this._requestManager, watches.vlry(), formatters.outputLogFormatter, callback, filterCreationErrorCallback);
 };
 
-Ftm.prototype.namereg = function () {
+Vlry.prototype.namereg = function () {
     return this.contract(namereg.global.abi).at(namereg.global.address);
 };
 
-Ftm.prototype.icapNamereg = function () {
+Vlry.prototype.icapNamereg = function () {
     return this.contract(namereg.icap.abi).at(namereg.icap.address);
 };
 
-Ftm.prototype.isSyncing = function (callback) {
+Vlry.prototype.isSyncing = function (callback) {
     return new IsSyncing(this._requestManager, callback);
 };
 
-module.exports = Ftm;
+module.exports = Vlry;
 
 },{"../../utils/config":18,"../../utils/utils":20,"../contract":25,"../filter":29,"../formatters":30,"../iban":33,"../method":36,"../namereg":44,"../property":45,"../syncing":48,"../transfer":49,"./watches":43}],380:[function(require,module,exports){
 /*
