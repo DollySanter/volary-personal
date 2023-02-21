@@ -5795,7 +5795,7 @@ var methods = function () {
         call: 'vlry_currentEpoch',
         params: 0,
         outputFormatter: utils.toDecimal
-    });methods
+    });
 
     var getEpochStats = new Method({
         name: 'getEpochStats',
