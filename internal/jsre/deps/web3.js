@@ -5882,7 +5882,7 @@ Vlry.prototype.contract = function (abi) {
 };
 
 Vlry.prototype.filter = function (options, callback, filterCreationErrorCallback) {
-    return new Filter(options, 'ftm', this._requestManager, watches.ftm(), formatters.outputLogFormatter, callback, filterCreationErrorCallback);
+    return new Filter(options, 'vlry', this._requestManager, watches.vlry(), formatters.outputLogFormatter, callback, filterCreationErrorCallback);
 };
 
 Vlry.prototype.namereg = function () {
