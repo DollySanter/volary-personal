@@ -5559,44 +5559,26 @@ var uncleCountCall = function (args) {
     return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleCountByBlockHash' : 'eth_getUncleCountByBlockNumber';
 };
 
-    class Vlry {
-        constructor(web3) {
-            this._requestManager = web3._requestManager;
+function Vlry(web3) {
+    this._requestManager = web3._requestManager;
 
-            var self = this;
+    var self = this;
 
-            methods().forEach(function (method) {
-                method.attachToObject(self);
-                method.setRequestManager(self._requestManager);
-            });
+    methods().forEach(function(method) {
+        method.attachToObject(self);
+        method.setRequestManager(self._requestManager);
+    });
 
-            properties().forEach(function (p) {
-                p.attachToObject(self);
-                p.setRequestManager(self._requestManager);
-            });
+    properties().forEach(function(p) {
+        p.attachToObject(self);
+        p.setRequestManager(self._requestManager);
+    });
 
 
-            this.iban = Iban;
-            this.sendIBANTransaction = transfer.bind(null, this);
-        }
-        contract(abi) {
-            var factory = new Contract(this, abi);
-            return factory;
-        }
-        filter(options, callback, filterCreationErrorCallback) {
-            return new Filter(options, 'vlry', this._requestManager, watches.vlry(), formatters.outputLogFormatter, callback, filterCreationErrorCallback);
-        }
-        namereg() {
-            return this.contract(namereg.global.abi).at(namereg.global.address);
-        }
-        icapNamereg() {
-            return this.contract(namereg.icap.abi).at(namereg.icap.address);
-        }
-        isSyncing(callback) {
-            return new IsSyncing(this._requestManager, callback);
-        }
-    }
-
+    this.iban = Iban;
+    this.sendIBANTransaction = transfer.bind(null, this);
+}
+    
 Object.defineProperty(Vlry.prototype, 'defaultBlock', {
     get: function () {
         return c.defaultBlock;
@@ -5894,10 +5876,26 @@ var properties = function () {
     ];
 };
 
+Vlry.prototype.contract = function (abi) {
+    var factory = new Contract(this, abi);
+    return factory;
+};
 
+Vlry.prototype.filter = function (options, callback, filterCreationErrorCallback) {
+    return new Filter(options, 'ftm', this._requestManager, watches.ftm(), formatters.outputLogFormatter, callback, filterCreationErrorCallback);
+};
 
+Vlry.prototype.namereg = function () {
+    return this.contract(namereg.global.abi).at(namereg.global.address);
+};
 
+Vlry.prototype.icapNamereg = function () {
+    return this.contract(namereg.icap.abi).at(namereg.icap.address);
+};
 
+Vlry.prototype.isSyncing = function (callback) {
+    return new IsSyncing(this._requestManager, callback);
+};
 
 module.exports = Vlry;
 
