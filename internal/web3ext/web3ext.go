@@ -22,7 +22,7 @@ var Modules = map[string]string{
 	"clique":   CliqueJs,
 	"vlryash":  VlryashJs,
 	"debug":    DebugJs,
-	"vlry":     VlryJs,
+	"vlry":     FTMJs,
 	"miner":    MinerJs,
 	"net":      NetJs,
 	"personal": PersonalJs,
@@ -458,7 +458,7 @@ web3._extend({
 });
 `
 
-const VlryJs = `
+const FTMJs = `
 web3._extend({
 	property: 'vlry',
 	methods: [
