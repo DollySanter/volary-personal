@@ -2554,7 +2554,7 @@ var Settings = require('./web3/settings');
 var version = require('./version.json');
 var utils = require('./utils/utils');
 var sha3 = require('./utils/sha3');
-var extend = require('./web3/extend');
+// var extend = require('./web3/extend');
 var Batch = require('./web3/batch');
 var Property = require('./web3/property');
 var HttpProvider = require('./web3/httpprovider');
@@ -2584,10 +2584,10 @@ function Web3 (provider) {
         HttpProvider: HttpProvider,
         IpcProvider: IpcProvider
     };
-    this._extend = extend(this);
-    this._extend({
-        properties: properties()
-    });
+    // this._extend = extend(this);
+    // this._extend({
+    //     properties: properties()
+    // });
 }
 
 // expose providers on the class
