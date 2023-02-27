@@ -18,18 +18,18 @@
 package web3ext
 
 var Modules = map[string]string{
-	// "admin":   AdminJs,
-	// "clique":  CliqueJs,
-	// "vlryash": VlryashJs,
-	// "debug":   DebugJs,
-	// "vlry":     FTMJs,
-	// "miner":    MinerJs,
-	// "net":      NetJs,
-	// "personal": PersonalJs,
-	// "rpc":      RpcJs,
-	// "txpool":   TxpoolJs,
-	// "les":      LESJs,
-	// "vflux":    VfluxJs,
+	"admin":    AdminJs,
+	"clique":   CliqueJs,
+	"vlryash":  VlryashJs,
+	"debug":    DebugJs,
+	"vlry":     VlryJs,
+	"miner":    MinerJs,
+	"net":      NetJs,
+	"personal": PersonalJs,
+	"rpc":      RpcJs,
+	"txpool":   TxpoolJs,
+	"les":      LESJs,
+	"vflux":    VfluxJs,
 }
 
 const CliqueJs = `
@@ -458,7 +458,7 @@ web3._extend({
 });
 `
 
-const FTMJs = `
+const VlryJs = `
 web3._extend({
 	property: 'vlry',
 	methods: [
