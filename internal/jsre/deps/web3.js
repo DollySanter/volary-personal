@@ -5899,7 +5899,7 @@ Vlry.prototype.isSyncing = function (callback) {
 
 module.exports = Vlry;
 
-// },{"../../utils/config":18,"../../utils/utils":20,"../contract":25,"../filter":29,"../formatters":30,"../iban":33,"../method":36,"../namereg":44,"../property":45,"../syncing":48,"../transfer":49,"./watches":43}],380:[function(require,module,exports){
+},{"../../utils/config":18,"../../utils/utils":20,"../contract":25,"../filter":29,"../formatters":30,"../iban":33,"../method":36,"../namereg":44,"../property":45,"../syncing":48,"../transfer":49,"./watches":43}],380:[function(require,module,exports){
 /*
       This file is part of web3.js.
 
