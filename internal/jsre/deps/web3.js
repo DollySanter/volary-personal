@@ -2540,7 +2540,7 @@ module.exports={
 
 var RequestManager = require('./web3/requestmanager');
 var Iban = require('./web3/iban');
-var Vlry = require('./web3/methods/ftm');
+var Vlry = require('./web3/methods/vlry');
 var Debug = require('./web3/methods/debug');
 var Sfc = require('./web3/methods/sfc');
 var Abft = require('./web3/methods/abft');
